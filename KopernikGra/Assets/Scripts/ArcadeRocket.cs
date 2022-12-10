@@ -19,6 +19,8 @@ public class ArcadeRocket : MonoBehaviour
     // The rigidbody component of the rocket
     private Rigidbody2D rb;
 
+    [SerializeField] GameObject thruster;
+
     void Start()
     {
         // Get the rigidbody component of the rocket
@@ -33,6 +35,8 @@ public class ArcadeRocket : MonoBehaviour
             // Check if the rocket has enough thrust to move
             if (currentThrust > 0)
             {
+                thruster.SetActive(true);
+                
                 // Get the position of the mouse in world space
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -57,6 +61,7 @@ public class ArcadeRocket : MonoBehaviour
         }
         else
         {
+            thruster.SetActive(false);
             // If the left mouse button is not held down, regenerate the rocket's thrust
             currentThrust += Time.deltaTime * thrustRegenRate;
             currentThrust = Mathf.Clamp(currentThrust, 0, maxThrust);
