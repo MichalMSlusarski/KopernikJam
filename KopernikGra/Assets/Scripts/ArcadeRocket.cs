@@ -6,8 +6,10 @@ public class ArcadeRocket : MonoBehaviour
 {
     public float speed = 10.0f;
     public float thrustRegenRate = 0.5f;
-    public float maxThrust = 100.0f;
-    public float currentThrust = 0.0f;
+    public float maxThrust = 10.0f;
+    public float currentThrust = 9.0f;
+    public int lives = 3;
+    [SerializeField] float rate = 1f;
     private Rigidbody2D rb;
 
     [SerializeField] GameObject thruster;
@@ -15,13 +17,14 @@ public class ArcadeRocket : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        lives = 3;
     }
 
     void Update()
     {
         if (Input.GetMouseButton(0))
         {
-            if (currentThrust > 0)
+            if (currentThrust >= 0.5f)
             {
                 thruster.SetActive(true);
                 
@@ -39,15 +42,36 @@ public class ArcadeRocket : MonoBehaviour
 
                 rb.velocity = direction * speed;
 
-                currentThrust -= Time.deltaTime;
+                currentThrust -= Time.deltaTime * rate;
+            }
+            else
+            {
+                thruster.SetActive(false);
             }
         }
         else
         {
-            thruster.SetActive(false);
+            
             // If the left mouse button is not held down, regenerate the rocket's thrust
             currentThrust += Time.deltaTime * thrustRegenRate;
             currentThrust = Mathf.Clamp(currentThrust, 0, maxThrust);
+            thruster.SetActive(false);
+        }
+    }
+
+    void OnCollisionEnter(Collision collision) 
+    {
+        string type = collision.gameObject.tag;
+        Debug.Log(type);
+        
+        if(type == "Planet")
+        {
+            rb.velocity = Vector2.zero;
+            lives--;
+        }
+        else if(type == "Heart")
+        {
+            lives++;
         }
     }
 }
