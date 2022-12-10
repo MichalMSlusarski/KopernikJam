@@ -7,7 +7,7 @@ public class ArcadeRocket : MonoBehaviour
     public float speed = 10.0f;
     public float thrustRegenRate = 0.5f;
     public float maxThrust = 100.0f;
-    private float currentThrust = 0.0f;
+    public float currentThrust = 0.0f;
     private Rigidbody2D rb;
 
     [SerializeField] GameObject thruster;
